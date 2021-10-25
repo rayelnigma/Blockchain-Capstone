@@ -300,11 +300,16 @@ contract ERC721 is Pausable, ERC165 {
     // TIP: remember the functions to use for Counters. you can refresh yourself with the link above
     function _mint(address to, uint256 tokenId) internal {
         // DONE revert if given tokenId already exists or given address is invalid
-        revert(_tokenOwner[tokenId] == address(0) || to == address(0));
+        if (to == address(0)) {
+            revert("invalid address provided");
+        }
+        if (_tokenOwner[tokenId] != address(0)) {
+            revert("tokenId already exists");
+        }
 
         // DONE mint tokenId to given address & increase token count of owner
-        ERC721Enumerable._mint(to, tokenId);
-        Counters.increment(_ownedTokensCount(to));
+        _tokenOwner[tokenId] = to;
+        Counters.increment(_ownedTokensCount[to]);
 
         // DONE emit Transfer event
         emit Transfer(address(0), to, tokenId);
@@ -323,10 +328,19 @@ contract ERC721 is Pausable, ERC165 {
             "from address must be owner of tokenId"
         );
 
-        // TODO: require token is being transfered to valid address
-        // TODO: clear approval
-        // TODO: update token counts & transfer ownership of the token ID
-        // TODO: emit correct event
+        // DONE: require token is being transfered to valid address
+        require(to != address(0), "new token address must be valid");
+
+        // DONE: clear approval
+        delete _tokenApprovals[tokenId];
+
+        // DONE: update token counts & transfer ownership of the token ID
+        Counters.decrement(_ownedTokensCount[from]);
+        Counters.increment(_ownedTokensCount[to]);
+        _transferFrom(from, to, tokenId);
+
+        // DONE: emit correct event
+        emit Transfer(from, to, tokenId);
     }
 
     /**
@@ -553,9 +567,13 @@ contract ERC721Enumerable is ERC165, ERC721 {
 }
 
 contract ERC721Metadata is ERC721Enumerable, usingOraclize {
-    // TODO: Create private vars for token _name, _symbol, and _baseTokenURI (string)
+    // DONE: Create private vars for token _name, _symbol, and _baseTokenURI (string)
+    string private _name;
+    string private _symbol;
+    string private _baseTokenURI;
 
-    // TODO: create private mapping of tokenId's to token uri's called '_tokenURIs'
+    // DONE: create private mapping of tokenId's to token uri's called '_tokenURIs'
+    mapping(uint256 => string) private _tokenURIs;
 
     bytes4 private constant _INTERFACE_ID_ERC721_METADATA = 0x5b5e139f;
 
@@ -571,31 +589,66 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
         string memory symbol,
         string memory baseTokenURI
     ) public {
-        // TODO: set instance var values
-
+        // DONE: set instance var values
+        _name = name;
+        _symbol = symbol;
+        _baseTokenURI = baseTokenURI;
         _registerInterface(_INTERFACE_ID_ERC721_METADATA);
     }
 
-    // TODO: create external getter functions for name, symbol, and baseTokenURI
+    // DONE: create external getter functions for name, symbol, and baseTokenURI
+    function name() external view returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view returns (string memory) {
+        return _symbol;
+    }
+
+    function baseTokenURI() external view returns (string memory) {
+        return _baseTokenURI;
+    }
 
     function tokenURI(uint256 tokenId) external view returns (string memory) {
         require(_exists(tokenId));
         return _tokenURIs[tokenId];
     }
 
-    // TODO: Create an internal function to set the tokenURI of a specified tokenId
+    // DONE: Create an internal function to set the tokenURI of a specified tokenId
     // It should be the _baseTokenURI + the tokenId in string form
     // TIP #1: use strConcat() from the imported oraclizeAPI lib to set the complete token URI
     // TIP #2: you can also use uint2str() to convert a uint to a string
     // see https://github.com/oraclize/ethereum-api/blob/master/oraclizeAPI_0.5.sol for strConcat()
     // require the token exists before setting
+    function setTokenURI(uint256 tokenId) internal {
+        require(ownerOf(tokenId) != address(0));
+        _tokenURIs[tokenId] = strConcat(_baseTokenURI, uint2str(tokenId));
+    }
 }
 
-//  TODO's: Create CustomERC721Token contract that inherits from the ERC721Metadata contract. You can name this contract as you please
-//  1) Pass in appropriate values for the inherited ERC721Metadata contract
-//      - make the base token uri: https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/
-//  2) create a public mint() that does the following:
-//      -can only be executed by the contract owner
-//      -takes in a 'to' address, tokenId, and tokenURI as parameters
-//      -returns a true boolean upon completion of the function
-//      -calls the superclass mint and setTokenURI functions
+//  DONE's: Create CustomERC721Token contract that inherits from the ERC721Metadata contract. You can name this contract as you please
+contract RealEstateMarketplaceToken is ERC721Metadata {
+    //  1) Pass in appropriate values for the inherited ERC721Metadata contract
+    //      - make the base token uri: https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/
+    constructor()
+        public
+        ERC721Metadata(
+            "RealEstateMarketPlaceToken",
+            "RET",
+            "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/"
+        )
+    {}
+
+    //  2) create a public mint() that does the following:
+    //      -can only be executed by the contract owner
+    //      -takes in a 'to' address, tokenId, and tokenURI as parameters
+    //      -returns a true boolean upon completion of the function
+    //      -calls the superclass mint and setTokenURI functions
+    // NOTE: I removed tokenURI because it wasn't used, as it is dynamically constructed
+    //       in setTokenURI()
+    function mint(address to, uint256 tokenId) public onlyOwner returns (bool) {
+        super._mint(to, tokenId);
+        setTokenURI(tokenId);
+        return true;
+    }
+}
