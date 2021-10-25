@@ -12,7 +12,7 @@ contract Ownable {
 
     event OwnershipTransfer(address oldOwner, address newOwner);
 
-    function owner() public returns (address) {
+    function owner() public view returns (address) {
         return _owner;
     }
 
