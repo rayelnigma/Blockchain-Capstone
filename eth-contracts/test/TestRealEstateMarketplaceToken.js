@@ -7,6 +7,9 @@ contract('RealEstateMarketplaceToken', accounts => {
     const account_two = accounts[1];
     let tokens = new Array();
     let tokenIndex = 0;
+    before(async () => {
+        console.log('before');
+    });
 
     describe('match erc721 spec', function () {
         beforeEach(async function () {
