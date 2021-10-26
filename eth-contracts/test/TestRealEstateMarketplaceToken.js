@@ -13,6 +13,11 @@ contract('RealEstateMarketplaceToken', accounts => {
         console.log('before');
         // this.contract = await RealEstateMarketplaceToken.new({ from: account_one });
         theContract = await RealEstateMarketplaceToken.deployed();
+        tokens.push(await theContract.mint(account_one, ++tokenIndex));
+        tokens.push(await theContract.mint(account_one, ++tokenIndex));
+        tokens.push(await theContract.mint(account_two, ++tokenIndex));
+        tokens.push(await theContract.mint(account_two, ++tokenIndex));
+        tokens.push(await theContract.mint(account_two, ++tokenIndex));
     });
 
     describe('match erc721 spec', function () {
@@ -20,33 +25,32 @@ contract('RealEstateMarketplaceToken', accounts => {
             // console.log('this2:', this);
             // this.contract = await RealEstateMarketplaceToken.new({ from: account_one });
             // TODO: mint multiple tokens
-            tokens.push(await theContract.mint(account_one, ++tokenIndex));
-            tokens.push(await theContract.mint(account_one, ++tokenIndex));
-            tokens.push(await theContract.mint(account_two, ++tokenIndex));
-            tokens.push(await theContract.mint(account_two, ++tokenIndex));
-            tokens.push(await theContract.mint(account_two, ++tokenIndex));
             console.log('calling beforeEach#1');
         })
 
         it('should return total supply', async function () {
+            tokens.push(await theContract.mint(account_two, ++tokenIndex));
             let totalSupply = await theContract.totalSupply();
             assert.equal(totalSupply, tokenIndex);
         })
 
         it('should get token balance', async function () {
+            tokens.push(await theContract.mint(account_two, ++tokenIndex));
             let tokenBalance = await theContract.tokenBalance(account_two);
             assert.equal(tokenBalance, 3);
         })
 
         // token uri should be complete i.e: https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/1
         it('should return token uri', async function () {
-            let tokenUri = await theContract.tokenUri(1);
+            tokens.push(await theContract.mint(account_two, ++tokenIndex));
+            let tokenUri = await theContract.tokenURI(1);
             let expectedUri = "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/" + 1;
 
             assert.equal(tokenUri, expectedUri);
         })
 
         it('should transfer token from one owner to another', async function () {
+            tokens.push(await theContract.mint(account_two, ++tokenIndex));
             await theContract.transferFrom(account_one, account_two, 2);
             let tokenBalance = await theContract.tokenBalance(account_one);
             assert.equal(tokenBalance, 1);
@@ -60,6 +64,7 @@ contract('RealEstateMarketplaceToken', accounts => {
         })
 
         it('should fail when minting when address is not contract owner', async function () {
+            tokens.push(await theContract.mint(account_two, ++tokenIndex));
             await truffleAssert.reverts(
                 theContract.mint(account_two, 999, { from: account_two }),
                 'this function can only be called by the owner of the contract');
@@ -67,6 +72,7 @@ contract('RealEstateMarketplaceToken', accounts => {
         })
 
         it('should return contract owner', async function () {
+            tokens.push(await theContract.mint(account_two, ++tokenIndex));
             let contractOwner = await theContract.owner();
             assert.equal(contractOwner, account_one);
         })
