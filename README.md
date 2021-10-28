@@ -29,3 +29,8 @@ Docker Desktop 4.1.1 (69879)
 Microsoft Windows [Version 10.0.19042.1288]
 
 docker run -v //c/users/jerom/source/Blockchain-Capstone/zokrates/code:/home/zokrates/code -ti zokrates/zokrates /bin/bash
+zokrates compile -i square.code
+zokrates setup
+zokrates compute-witness -a ?
+zokrates generate-proof
+zokrates export-verifier
