@@ -4,9 +4,11 @@ var SquareVerifier = artifacts.require("./SquareVerifier.sol");
 var SolnSquareVerifier = artifacts.require("./SolnSquareVerifier.sol");
 
 module.exports = function (deployer) {
-  deployer.deploy(RealEstateMarketplaceToken("RealEstateMarketPlaceToken",
-    "RET"));
-  deployer.deploy(SquareVerifier);
-  deployer.deploy(SolnSquareVerifier("RealEstateMarketNFT",
-    "REM"));
+  deployer.deploy(RealEstateMarketplaceToken, "RealEstateMarketPlaceToken",
+    "RET");
+  deployer.deploy(SquareVerifier)
+    .then(() => {
+      deployer.deploy(SolnSquareVerifier, SquareVerifier.address, "RealEstateMarketNFT",
+        "REM");
+    });
 };
