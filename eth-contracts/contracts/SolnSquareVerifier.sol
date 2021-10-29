@@ -54,7 +54,10 @@ contract SolnSquareVerifier is RealEstateMarketplaceToken {
     );
 
     // DONE Create a function to add the solutions to the array and emit the event
-    function addSolution(address ownerAddress, bytes32 solutionHash) private {
+    function addSolution(address ownerAddress, bytes32 solutionHash)
+        public
+        onlyOwner
+    {
         uint256 indexOfSolution = submittedSolutions.length + 1;
         Solution memory _solution = Solution(
             indexOfSolution,
@@ -74,7 +77,7 @@ contract SolnSquareVerifier is RealEstateMarketplaceToken {
         return squareVerifierContract.verifyTx(proof, input);
     }
 
-    // TODO Create a function to mint new NFT only after the solution has been verified
+    // DONE Create a function to mint new NFT only after the solution has been verified
     //  - make sure the solution is unique (has not been used before)
     //  - make sure you handle metadata as well as tokenSupply
     function mint(
@@ -82,7 +85,7 @@ contract SolnSquareVerifier is RealEstateMarketplaceToken {
         uint256[2] memory input,
         address to,
         uint256 tokenId
-    ) public returns (bool) {
+    ) public onlyOwner returns (bool) {
         bytes32 solutionHash = keccak256(
             abi.encodePacked(
                 proof.a.X,
