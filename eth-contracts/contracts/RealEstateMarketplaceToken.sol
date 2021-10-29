@@ -629,11 +629,11 @@ contract ERC721Metadata is ERC721Enumerable, usingOraclize {
 contract RealEstateMarketplaceToken is ERC721Metadata {
     //  1) Pass in appropriate values for the inherited ERC721Metadata contract
     //      - make the base token uri: https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/
-    constructor()
+    constructor(string memory name, string memory symbol)
         public
         ERC721Metadata(
-            "RealEstateMarketPlaceToken",
-            "RET",
+            name,
+            symbol,
             "https://s3-us-west-2.amazonaws.com/udacity-blockchain/capstone/"
         )
     {}
