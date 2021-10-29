@@ -38,9 +38,8 @@ contract('SolnSquareVerifier', accounts => {
 
     // Test if a new solution can be added for contract - SolnSquareVerifier
     it('', async function () {
-        let result1 = await theContract.addSolution(accounts[1], "testing");
+        let result1 = await theContract.addSolution(accounts[1], web3.utils.fromAscii("testing"));
         truffleAssert.eventEmitted(result1, 'SolutionAdded', (ev) => {
-            console.log(ev);
             return true;
         });
     });
