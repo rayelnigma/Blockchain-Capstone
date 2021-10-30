@@ -43,14 +43,16 @@ from 1 to whatever your address position is (zero index is first).
 
 # Writeup for project submission:
 
+Project Link: https://github.com/rayelnigma/Blockchain-Capstone
+
 Rinkeby contract address: 0x1FAD7E0821ACC768d9cE3881D09817d30aF2BA59
 Rinkeby contract linke: https://rinkeby.etherscan.io/address/0x1FAD7E0821ACC768d9cE3881D09817d30aF2BA59
 
 Contract ABIs:
 
-- eth-contracts\build\contracts\RealEstateMarketplaceToken.json
-- eth-contracts\build\contracts\SolnSquareVerifier.json
-- eth-contracts\build\contracts\SquareVerifier.json
+- [eth-contracts\build\contracts\RealEstateMarketplaceToken.json](https://raw.githubusercontent.com/rayelnigma/Blockchain-Capstone/master/eth-contracts/build/contracts/RealEstateMarketplaceToken.json)
+- [eth-contracts\build\contracts\SolnSquareVerifier.json](https://raw.githubusercontent.com/rayelnigma/Blockchain-Capstone/master/eth-contracts/build/contracts/SolnSquareVerifier.json)
+- [eth-contracts\build\contracts\SquareVerifier.json](https://raw.githubusercontent.com/rayelnigma/Blockchain-Capstone/master/eth-contracts/build/contracts/SquareVerifier.json)
 
 OpenSea MarketPlace Storefront link: https://testnets.opensea.io/collection/jeromynft
 
