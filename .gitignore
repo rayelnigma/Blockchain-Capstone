@@ -1,4 +1,3 @@
 node_modules
 bin
-eth-contracts/build
 eth-contracts/.env

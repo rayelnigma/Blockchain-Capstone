@@ -13,6 +13,47 @@ The capstone will build upon the knowledge you have gained in the course in orde
 - [Docker](https://docs.docker.com/install/)
 - [ZoKrates](https://github.com/Zokrates/ZoKrates)
 
+# Testing Instructions
+
+To test using truffles built in ganache, do the following:
+
+```
+cd eth-contracts
+npm install
+truffle develop
+compile
+test
+```
+
+To test on the Rinkeby network you will need to create a .env file within the eth-contracts folder.
+
+```
+INFURA_KEY=<your infura key>
+FROM_ADDRESS=<the address in your wallet that has ether>
+MNEMONIC=<the mnemonic for your wallet>
+```
+
+NOTE: I was using the 2nd address in my wallet, so if you want to use a different one you will need to update the truffle-config.js line:
+
+```
+      provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`, 1),
+```
+
+from 1 to whatever your address position is (zero index is first).
+
+# Writeup for project submission:
+
+Rinkeby contract address: 0x1FAD7E0821ACC768d9cE3881D09817d30aF2BA59
+Rinkeby contract linke: https://rinkeby.etherscan.io/address/0x1FAD7E0821ACC768d9cE3881D09817d30aF2BA59
+
+Contract ABIs:
+
+- eth-contracts\build\contracts\RealEstateMarketplaceToken.json
+- eth-contracts\build\contracts\SolnSquareVerifier.json
+- eth-contracts\build\contracts\SquareVerifier.json
+
+OpenSea MarketPlace Storefront link: https://testnets.opensea.io/collection/jeromynft
+
 # Jeromy's Notes
 
 Previously had Docker Toolbox, but it seems it was out of date, the Oracle Virtual Box wouldn't even work. I discovered that the new Docker Desktop would work with WSL 2. I had to upgrade various things to get it working, but now it is working.
