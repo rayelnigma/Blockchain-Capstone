@@ -8,6 +8,6 @@ module.exports = function (deployer) {
     "RET");
   deployer.deploy(SquareVerifier)
     .then(() => SquareVerifier.deployed())
-    .then(_instance => deployer.deploy(SolnSquareVerifier, SquareVerifier.address, "RealEstateMarketNFT",
-      "REM"));
+    .then(_instance => deployer.deploy(SolnSquareVerifier, SquareVerifier.address, "JeromyNFT",
+      "JLC"));
 };

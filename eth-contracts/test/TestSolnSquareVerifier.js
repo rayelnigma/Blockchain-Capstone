@@ -5,6 +5,7 @@ var truffleAssert = require('truffle-assertions');
 contract('SolnSquareVerifier', accounts => {
 
     let theContract;
+    let mintedTokenId = 777;
     const proof1 = {
         "proof": {
             "a": [
@@ -63,7 +64,7 @@ contract('SolnSquareVerifier', accounts => {
     });
 
     // Test if a new solution can be added for contract - SolnSquareVerifier
-    it('', async function () {
+    it('Test if a new solution can be added for contract', async function () {
         let result1 = await theContract.addSolution(accounts[1], web3.utils.fromAscii("testing"));
         truffleAssert.eventEmitted(result1, 'SolutionAdded', (ev) => {
             return true;
@@ -71,24 +72,35 @@ contract('SolnSquareVerifier', accounts => {
     });
 
     // Test if an ERC721 token can be minted for contract - SolnSquareVerifier
-    it('', async function () {
-        let result1 = await theContract.mint(proof1.proof, proof1.inputs, accounts[2], 777);
+    it('Test if an ERC721 token can be minted for contract', async function () {
+        let result1 = await theContract.mint(proof1.proof, proof1.inputs, accounts[2], mintedTokenId);
         truffleAssert.eventEmitted(result1, 'SolutionAdded', (ev) => {
             return true;
         })
     });
 
-    // Test if an ERC721 token is rejected when a duplicate solution is provided
-    it('', async function () {
+    it('Test if an ERC721 token is rejected when a duplicate solution is provided', async function () {
         await truffleAssert.reverts(theContract.mint(proof1.proof, proof1.inputs, accounts[4], 666),
             "must be a unique solution");
 
     });
 
-    // Test if an ERC721 token is rejected when an invalid proof is provided
-    it('', async function () {
+    it('Test if an ERC721 token is rejected when an invalid proof is provided', async function () {
         await truffleAssert.reverts(theContract.mint(proof2.proof, proof2.inputs, accounts[3], 666),
             "must be a valid proof to continue");
+    });
+
+    it('test we can transfer using an operator (opensea)', async () => {
+        await theContract.setApprovalForAll(accounts[3], true, { from: accounts[2] });
+        //await theContract.approve(accounts[3], mintedTokenId, { from: accounts[2] });
+        result = await theContract.transferFrom(accounts[2], accounts[4], mintedTokenId, { from: accounts[3] })
+            .catch(error => {
+                console.log("got an error: ", error);
+                throw error;
+            });
+        truffleAssert.eventEmitted(result, 'Transfer', (ev) => {
+            return true;
+        })
     });
 });
 

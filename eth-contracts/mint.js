@@ -267,19 +267,24 @@ contract('SolnSquareVerifier', accounts => {
             ]
         }
     ];
-    let tokenId = 2;
+    let tokenId = 1;
 
     before(async () => {
         console.log('before');
         // theContract = await SolnSquareVerifier.deployed();
-        theContract = await SolnSquareVerifier.at("0x4D64B330D6e7D5469F7978aab49254B485125D97");
+        theContract = await SolnSquareVerifier.at("0x1FAD7E0821ACC768d9cE3881D09817d30aF2BA59");
     });
 
     // Mint coins
     it('mint 10 coins', async function () {
-        for (i = 1; i < proofs.length; i++) {
-            console.log('minting coin: ', tokenId);
-            await theContract.mint(proofs[i].proof, proofs[i].inputs, accounts[0], tokenId++);
+        console.log('total number of proofs available: ', proofs.length);
+        for (i = 0; i < proofs.length; i++) {
+            console.log('minting coin: ', tokenId, ', owner: ', accounts[0]);
+            await theContract.mint(proofs[i].proof, proofs[i].inputs, accounts[0], tokenId++)
+                .catch(error => {
+                    console.log('there was an error: ', error);
+                    throw error;
+                });
         }
     });
 
