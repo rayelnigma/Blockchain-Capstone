@@ -15,7 +15,7 @@ The capstone will build upon the knowledge you have gained in the course in orde
 
 # Testing Instructions
 
-To test using truffles built in ganache, do the following:
+To test using truffles built in ganache, do the following: 
 
 ```
 cd eth-contracts
